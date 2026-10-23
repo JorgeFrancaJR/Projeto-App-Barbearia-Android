@@ -7,6 +7,8 @@ import {
   ScrollView,
   TouchableOpacity,
   StatusBar,
+  Linking,
+  Alert,
 } from 'react-native';
 
 const services = [
@@ -39,7 +41,19 @@ const services = [
     time: '1h 10min',
   },
 ];
+const abrirWhatsApp = async () => {
+  const telefone = '5521959034244';
 
+  const mensagem = 'Olá! Gostaria de mais informações sobre os serviços da Barbearia do Baiano, pra ver se ele é BAIANO';
+
+  const url = `https://wa.me/${telefone}?text=${encodeURIComponent(mensagem)}`;
+
+  try {
+    await Linking.openURL(url);
+  } catch (error) {
+    Alert.alert('Erro', 'Não foi possível abrir o WhatsApp.');
+  }
+};
 export default function OutraPag({ navigation }) {
   return (
     <SafeAreaView style={styles.container}>
@@ -106,6 +120,15 @@ export default function OutraPag({ navigation }) {
               <Text style={styles.infoLabel}>📞 CONTATO</Text>
               <Text style={styles.infoValue}>(21) 99512-2022</Text>
             </View>
+            {/* BOTÃO DO WHATSAPP */}
+            <TouchableOpacity
+              style={styles.whatsappButton}
+              onPress={abrirWhatsApp}
+            >
+              <Text style={styles.whatsappButtonText}>
+                CONVERSAR PELO WHATSAPP
+              </Text>
+            </TouchableOpacity>
           </View>
 
           {/* RODAPÉ */}
@@ -122,31 +145,176 @@ export default function OutraPag({ navigation }) {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#111111' },
-  header: { backgroundColor: '#111111', paddingHorizontal: 24, paddingTop: 45, paddingBottom: 35, alignItems: 'center' },
-  logo: { color: '#D4AF37', fontSize: 45, fontWeight: '900', letterSpacing: 6 },
-  divider: { width: 55, height: 2, backgroundColor: '#D4AF37', marginVertical: 25 },
-  welcome: { color: '#FFFFFF', fontSize: 24, fontWeight: '700', textAlign: 'center' },
-  headerDescription: { color: '#999999', fontSize: 14, lineHeight: 21, textAlign: 'center', marginTop: 10, maxWidth: 330 },
-  content: { backgroundColor: '#F5F3EF', borderTopLeftRadius: 30, borderTopRightRadius: 30, padding: 24, paddingTop: 30 },
-  sectionTitle: { color: '#111111', fontSize: 15, fontWeight: '900', letterSpacing: 1.5, marginBottom: 18 },
-  card: { backgroundColor: '#FFFFFF', borderRadius: 18, padding: 18, marginBottom: 16, elevation: 3 },
-  cardTop: { flexDirection: 'row', alignItems: 'flex-start' },
-  icon: { width: 48, height: 48, borderRadius: 14, backgroundColor: '#111111', alignItems: 'center', justifyContent: 'center', marginRight: 14 },
-  iconText: { color: '#D4AF37', fontSize: 23 },
-  serviceInfo: { flex: 1 },
-  serviceName: { color: '#111111', fontSize: 18, fontWeight: '800' },
-  description: { color: '#777777', fontSize: 13, lineHeight: 19, marginTop: 5 },
-  cardBottom: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginTop: 18, paddingTop: 14, borderTopWidth: 1, borderTopColor: '#EEEEEE' },
-  time: { color: '#777777', fontSize: 13 },
-  price: { color: '#111111', fontSize: 18, fontWeight: '900' },
-  button: { backgroundColor: '#111111', borderRadius: 10, paddingVertical: 13, alignItems: 'center', marginTop: 15 },
-  buttonText: { color: '#D4AF37', fontSize: 12, fontWeight: '900', letterSpacing: 1 },
-  about: { marginTop: 18, paddingTop: 10 },
-  infoRow: { borderTopWidth: 1, borderTopColor: '#DDDBD6', paddingVertical: 14 },
-  infoLabel: { color: '#111111', fontSize: 11, fontWeight: '900', letterSpacing: 0.5 },
-  infoValue: { color: '#777777', fontSize: 14, marginTop: 4 },
-  footer: { alignItems: 'center', paddingVertical: 35 },
-  footerLogo: { color: '#D4AF37', fontSize: 20, fontWeight: '900', letterSpacing: 4 },
-  footerText: { color: '#999999', fontSize: 11, marginTop: 8, textAlign: 'center' },
+  container: {
+    flex: 1,
+    backgroundColor: '#111111',
+  },
+  header: {
+    backgroundColor: '#111111',
+    paddingHorizontal: 24,
+    paddingTop: 45,
+    paddingBottom: 35,
+    alignItems: 'center',
+  },
+  logo: {
+    color: '#D4AF37',
+    fontSize: 45,
+    fontWeight: '900',
+    letterSpacing: 6,
+  },
+  divider: {
+    width: 55,
+    height: 2,
+    backgroundColor: '#D4AF37',
+    marginVertical: 25,
+  },
+  welcome: {
+    color: '#FFFFFF',
+    fontSize: 24,
+    fontWeight: '700',
+    textAlign: 'center',
+  },
+  headerDescription: {
+    color: '#999999',
+    fontSize: 14,
+    lineHeight: 21,
+    textAlign: 'center',
+    marginTop: 10,
+    maxWidth: 330,
+  },
+  content: {
+    backgroundColor: '#F5F3EF',
+    borderTopLeftRadius: 30,
+    borderTopRightRadius: 30,
+    padding: 24,
+    paddingTop: 30,
+  },
+  sectionTitle: {
+    color: '#111111',
+    fontSize: 15,
+    fontWeight: '900',
+    letterSpacing: 1.5,
+    marginBottom: 18,
+  },
+  card: {
+    backgroundColor: '#FFFFFF',
+    borderRadius: 18,
+    padding: 18,
+    marginBottom: 16,
+    elevation: 3,
+  },
+  cardTop: {
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+  },
+  icon: {
+    width: 48,
+    height: 48,
+    borderRadius: 14,
+    backgroundColor: '#111111',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginRight: 14,
+  },
+  iconText: {
+    color: '#D4AF37',
+    fontSize: 23,
+  },
+  serviceInfo: {
+    flex: 1,
+  },
+  serviceName: {
+    color: '#111111',
+    fontSize: 18,
+    fontWeight: '800',
+  },
+  description: {
+    color: '#777777',
+    fontSize: 13,
+    lineHeight: 19,
+    marginTop: 5,
+  },
+  cardBottom: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginTop: 18,
+    paddingTop: 14,
+    borderTopWidth: 1,
+    borderTopColor: '#EEEEEE',
+  },
+  time: {
+    color: '#777777',
+    fontSize: 13,
+  },
+  price: {
+    color: '#111111',
+    fontSize: 18,
+    fontWeight: '900',
+  },
+  button: {
+    backgroundColor: '#111111',
+    borderRadius: 10,
+    paddingVertical: 13,
+    alignItems: 'center',
+    marginTop: 15,
+  },
+  buttonText: {
+    color: '#D4AF37',
+    fontSize: 12,
+    fontWeight: '900',
+    letterSpacing: 1,
+  },
+  about: {
+    marginTop: 18,
+    paddingTop: 10,
+  },
+  infoRow: {
+    borderTopWidth: 1,
+    borderTopColor: '#DDDBD6',
+    paddingVertical: 14,
+  },
+  infoLabel: {
+    color: '#111111',
+    fontSize: 11,
+    fontWeight: '900',
+    letterSpacing: 0.5,
+  },
+  infoValue: {
+    color: '#777777',
+    fontSize: 14,
+    marginTop: 4,
+  },
+
+  // BOTÃO DO WHATSAPP
+  whatsappButton: {
+    backgroundColor: '#25D366',
+    borderRadius: 10,
+    paddingVertical: 15,
+    alignItems: 'center',
+    marginTop: 15,
+  },
+  whatsappButtonText: {
+    color: '#FFFFFF',
+    fontSize: 13,
+    fontWeight: '900',
+    letterSpacing: 0.5,
+  },
+
+  footer: {
+    alignItems: 'center',
+    paddingVertical: 35,
+  },
+  footerLogo: {
+    color: '#D4AF37',
+    fontSize: 20,
+    fontWeight: '900',
+    letterSpacing: 4,
+  },
+  footerText: {
+    color: '#999999',
+    fontSize: 11,
+    marginTop: 8,
+    textAlign: 'center',
+  },
 });
