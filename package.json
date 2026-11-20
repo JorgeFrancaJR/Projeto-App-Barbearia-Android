@@ -1,25 +1,25 @@
 {
   "license": "0BSD",
   "main": "index.js",
+  "dependencies": {
+    "expo": "~56.0.24",
+    "expo-status-bar": "~56.0.4",
+    "react": "19.2.3",
+    "react-native": "0.85.3",
+    "expo-sqlite": "~56.0.6",
+    "@expo/vector-icons": "^15.0.2",
+    "react-native-paper": "4.9.2",
+    "react-native-screens": "~4.26.0",
+    "@react-navigation/native": "*",
+    "react-native-gesture-handler": "~2.31.1",
+    "react-native-safe-area-context": "~5.7.0",
+    "@react-navigation/stack": "*"
+  },
   "scripts": {
     "start": "expo start",
     "android": "expo start --android",
     "ios": "expo start --ios",
     "web": "expo start --web"
-  },
-  "dependencies": {
-    "expo": "~54.0.37",
-    "expo-status-bar": "~3.0.9",
-    "react": "19.1.0",
-    "react-native": "0.81.5",
-    "@expo/vector-icons": "^15.0.3",
-    "react-native-paper": "4.9.2",
-    "react-native-screens": "~4.16.0",
-    "@react-navigation/stack": "*",
-    "@react-navigation/native": "*",
-    "react-native-gesture-handler": "~2.28.0",
-    "react-native-safe-area-context": "~5.6.0",
-    "expo-sqlite": "~16.0.10"
   },
   "private": true
 }
