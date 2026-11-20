@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+
 import {
   SafeAreaView,
   StatusBar,
@@ -9,7 +10,13 @@ import {
   ScrollView,
   Alert,
   StyleSheet,
+  ActivityIndicator,
 } from 'react-native';
+
+import {
+  inicializarBanco,
+  cadastrarUsuario,
+} from './BancoDeDados';
 
 export default function Cadastro({ navigation }) {
   const [nome, setNome] = useState('');
@@ -17,8 +24,9 @@ export default function Cadastro({ navigation }) {
   const [telefone, setTelefone] = useState('');
   const [senha, setSenha] = useState('');
   const [confirmarSenha, setConfirmarSenha] = useState('');
+  const [carregando, setCarregando] = useState(false);
 
-  const criarConta = () => {
+  const criarConta = async () => {
     if (
       !nome.trim() ||
       !email.trim() ||
@@ -30,6 +38,13 @@ export default function Cadastro({ navigation }) {
         'Campos obrigatórios',
         'Preencha todos os campos para criar sua conta.'
       );
+      return;
+    }
+
+    const emailFormatado = email.trim().toLowerCase();
+
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailFormatado)) {
+      Alert.alert('E-mail inválido', 'Digite um e-mail válido.');
       return;
     }
 
@@ -49,15 +64,51 @@ export default function Cadastro({ navigation }) {
       return;
     }
 
-    Alert.alert(
-      'Conta criada!',
-      'Seu cadastro foi realizado com sucesso.',
-      [
-        {
-          text: 'OK',
-          onPress: () => navigation.navigate('Horarios')}
-      ]
-    );
+    try {
+      setCarregando(true);
+
+      await inicializarBanco();
+
+      const resultado = await cadastrarUsuario({
+        nome: nome.trim(),
+        email: emailFormatado,
+        telefone: telefone.trim(),
+        senha: senha,
+      });
+
+      if (!resultado.sucesso) {
+        Alert.alert('Não foi possível cadastrar', resultado.mensagem);
+        return;
+      }
+
+      Alert.alert(
+        'Conta criada!',
+        'Seu cadastro foi realizado com sucesso. Agora faça seu login.',
+        [
+          {
+            text: 'OK',
+            onPress: () => navigation.navigate('Login'),
+          },
+        ]
+      );
+
+      setNome('');
+      setEmail('');
+      setTelefone('');
+      setSenha('');
+      setConfirmarSenha('');
+
+    } catch (erro) {
+      console.log('Erro ao cadastrar:', erro);
+
+      Alert.alert(
+        'Erro',
+        'Não foi possível criar sua conta. Tente novamente.'
+      );
+
+    } finally {
+      setCarregando(false);
+    }
   };
 
   return (
@@ -72,9 +123,7 @@ export default function Cadastro({ navigation }) {
           style={styles.botaoVoltar}
           onPress={() => navigation.goBack()}
         >
-          <Text style={styles.voltar}>
-            ‹
-          </Text>
+          <Text style={styles.voltar}>‹</Text>
         </TouchableOpacity>
 
         <Text style={styles.logo}>
@@ -90,6 +139,7 @@ export default function Cadastro({ navigation }) {
         style={styles.conteudo}
         contentContainerStyle={styles.conteudoInterno}
         showsVerticalScrollIndicator={false}
+        keyboardShouldPersistTaps="handled"
       >
         <Text style={styles.titulo}>
           Criar conta
@@ -110,6 +160,7 @@ export default function Cadastro({ navigation }) {
           placeholderTextColor="#999999"
           value={nome}
           onChangeText={setNome}
+          autoCapitalize="words"
         />
 
         <Text style={styles.label}>
@@ -124,6 +175,7 @@ export default function Cadastro({ navigation }) {
           onChangeText={setEmail}
           keyboardType="email-address"
           autoCapitalize="none"
+          autoCorrect={false}
         />
 
         <Text style={styles.label}>
@@ -150,6 +202,7 @@ export default function Cadastro({ navigation }) {
           value={senha}
           onChangeText={setSenha}
           secureTextEntry
+          autoCapitalize="none"
         />
 
         <Text style={styles.label}>
@@ -163,20 +216,30 @@ export default function Cadastro({ navigation }) {
           value={confirmarSenha}
           onChangeText={setConfirmarSenha}
           secureTextEntry
+          autoCapitalize="none"
         />
 
         <TouchableOpacity
-          style={styles.botaoCadastrar}
+          style={[
+            styles.botaoCadastrar,
+            carregando && styles.botaoDesativado,
+          ]}
           onPress={criarConta}
+          disabled={carregando}
         >
-          <Text style={styles.textoCadastrar}>
-            CRIAR CONTA
-          </Text>
+          {carregando ? (
+            <ActivityIndicator color="#111111" />
+          ) : (
+            <Text style={styles.textoCadastrar}>
+              CRIAR CONTA
+            </Text>
+          )}
         </TouchableOpacity>
 
         <TouchableOpacity
           style={styles.botaoJaTenho}
-          onPress={() => navigation.goBack()}
+          onPress={() => navigation.navigate('Login')}
+          disabled={carregando}
         >
           <Text style={styles.textoJaTenho}>
             Já tenho uma conta
@@ -283,6 +346,10 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     marginTop: 28,
+  },
+
+  botaoDesativado: {
+    opacity: 0.6,
   },
 
   textoCadastrar: {
