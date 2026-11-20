@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 
 import {
@@ -12,6 +11,7 @@ import {
   StatusBar,
   SafeAreaView,
   ActivityIndicator,
+  Vibration,
 } from 'react-native';
 
 import { NavigationContainer } from '@react-navigation/native';
@@ -29,6 +29,9 @@ import {
 
 const Stack = createStackNavigator();
 
+// Padrão de vibração de erro: vibra, pausa, vibra
+const VIBRACAO_ERRO = [0, 150, 100, 150];
+
 // =====================================
 // TELA DE LOGIN
 // =====================================
@@ -42,6 +45,7 @@ function Login({ navigation }) {
   const entrar = async () => {
 
     if (!email.trim() || !senha.trim()) {
+      Vibration.vibrate(VIBRACAO_ERRO);
       Alert.alert(
         'Campos obrigatórios',
         'Digite seu e-mail e sua senha.'
@@ -61,6 +65,7 @@ function Login({ navigation }) {
 
       // Usuário não encontrado
       if (!usuario) {
+        Vibration.vibrate(VIBRACAO_ERRO);
         Alert.alert(
           'Acesso negado',
           'E-mail ou senha incorretos. Verifique seus dados ou crie uma conta.'
@@ -91,6 +96,8 @@ function Login({ navigation }) {
     } catch (erro) {
 
       console.log('Erro no login:', erro);
+
+      Vibration.vibrate(VIBRACAO_ERRO);
 
       Alert.alert(
         'Erro',
