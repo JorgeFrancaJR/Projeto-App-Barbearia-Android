@@ -7,7 +7,14 @@ describe('Testes da função calcularTotal', () => {
       { nome: 'Corte', preco: 35 }
     ];
 
-    expect(calcularTotal(servicos)).toBe(35);
+    const resultado = calcularTotal(servicos);
+
+    console.log('-------------------------');
+    console.log('Teste: Um serviço');
+    console.log('Serviço: Corte');
+    console.log('Valor calculado: R$', resultado);
+
+    expect(resultado).toBe(35);
   });
 
   test('Calcula o preço de vários serviços', () => {
@@ -17,13 +24,28 @@ describe('Testes da função calcularTotal', () => {
       { nome: 'Sobrancelha', preco: 10 }
     ];
 
-    expect(calcularTotal(servicos)).toBe(70);
+    const resultado = calcularTotal(servicos);
+
+    console.log('-------------------------');
+    console.log('Teste: Vários serviços');
+    console.log('Corte: R$ 35');
+    console.log('Barba: R$ 25');
+    console.log('Sobrancelha: R$ 10');
+    console.log('Valor total calculado: R$', resultado);
+
+    expect(resultado).toBe(70);
   });
 
   test('Retorna zero quando não existem serviços', () => {
     const servicos = [];
 
-    expect(calcularTotal(servicos)).toBe(0);
+    const resultado = calcularTotal(servicos);
+
+    console.log('-------------------------');
+    console.log('Teste: Lista vazia');
+    console.log('Valor calculado: R$', resultado);
+
+    expect(resultado).toBe(0);
   });
 
 });
